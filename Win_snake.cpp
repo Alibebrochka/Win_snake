@@ -102,7 +102,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    int w = 1920, h = 1040;
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      0, 0, w, h, nullptr, nullptr, hInstance, nullptr);
+      200, 200, w-400, h-400, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
       return FALSE;
@@ -127,6 +127,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    PAINTSTRUCT ps;
     switch (message)
     {
     case WM_COMMAND:
@@ -149,7 +150,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_PAINT:
         {
-            PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
             Snake.Go(hdc, hWnd);
@@ -164,19 +164,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
         switch (wParam) {
         case VK_LEFT:
-            AsSnake::dir = LEFT;
+            if(AsSnake::dir != RIGHT)
+                AsSnake::dir = LEFT;
             break;
 
         case VK_RIGHT:
-            AsSnake::dir = RIGHT;
+            if (AsSnake::dir != LEFT)
+                AsSnake::dir = RIGHT;
             break;
 
         case VK_DOWN:
-            AsSnake::dir = DOWN;
+            if (AsSnake::dir != UP)
+                AsSnake::dir = DOWN;
             break;
 
         case VK_UP:
-            AsSnake::dir = UP;
+            if (AsSnake::dir != DOWN)
+                AsSnake::dir = UP;
             break;
         }
         break;
