@@ -3,7 +3,7 @@
 
 #include "framework.h"
 #include "Win_snake.h"
-#include "ASnake.h"
+#include "Snake.h"
 
 #define MAX_LOADSTRING 100
 
