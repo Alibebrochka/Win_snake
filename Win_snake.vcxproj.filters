@@ -19,6 +19,9 @@
     <Filter Include="Apple">
       <UniqueIdentifier>{5ad83bae-6ab5-4dd4-b4ad-1c0607af0073}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{5ab09e9c-bf89-47cf-9e33-5c07f27409b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -39,6 +42,9 @@
     <ClInclude Include="Apple.h">
       <Filter>Apple</Filter>
     </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win_snake.cpp">
@@ -49,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="Apple.cpp">
       <Filter>Apple</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>Config</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

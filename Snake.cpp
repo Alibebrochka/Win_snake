@@ -1,8 +1,10 @@
 #include "Snake.h"
 
 AsSnake::AsSnake():
-snake_color(CreateSolidBrush(RGB(255, 255, 255))),
-black(CreateSolidBrush(RGB(0, 0, 0)))
+Snake_Color_Pen(CreatePen(PS_SOLID, 0, RGB(255, 255, 255))),
+Snake_Color_Brush(CreateSolidBrush(RGB(255, 255, 255))),
+BG_Pen(CreatePen(PS_SOLID, 0, RGB(0, 0, 0))),
+BG_Brush(CreateSolidBrush(RGB(0, 0, 0)))
 {}
 
  eDirection AsSnake::dir = RIGHT;
@@ -15,19 +17,23 @@ void AsSnake::Init(HWND hWnd)
 	int height = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
 
 	Snake_Rect.left =  width / 2 ;
-	Snake_Rect.right = Snake_Rect.left + Apple.scale;
+	Snake_Rect.right = Snake_Rect.left + AsConfig::scale;
 	Snake_Rect.top = height / 2;
-	Snake_Rect.bottom = Snake_Rect.top + Apple.scale;
+	Snake_Rect.bottom = Snake_Rect.top + AsConfig::scale;
 	SetTimer(hWnd, WM_USER + 1, 100, 0);
 }
 
 void AsSnake::Go(HDC hdc, HWND hWnd)
 {
-	Draw(hdc, Apple.apple_col, Apple.Apple_Rect);
-	Draw(hdc, snake_color, Snake_Rect);
+	if (Apple.does_not_have_an_apple)
+		Apple.Draw(hdc, BG_Brush, BG_Pen, Apple.Apple_Rect);
+	else
+		Apple.Draw(hdc, Apple.Apple_Col_Brush,Apple.Apple_Col_Pen, Apple.Apple_Rect);
+
+	Draw(hdc, Snake_Color_Brush, Snake_Color_Pen, Snake_Rect);
 
 	if (body.size() > tail_length) {
-		Draw(hdc, black, body.front());
+		Draw(hdc, BG_Brush, BG_Pen, body.front());
 		body.pop_front();
 	}
 }
@@ -37,47 +43,23 @@ int AsSnake::On_Time(HWND hWnd)
 	GetWindowRect(hWnd, &Win_Rect);
 	int width = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
 	int height = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
+
+	Apple.Spawn(hWnd, width, height);
 	Movement(hWnd, width, height);
-	Apple.Ñreation(hWnd, width, height);
 	return 0;
 }
 
 void AsSnake::Movement(HWND hWnd, int width, int height)
 {
 	Tail(hWnd);
-	Head();
-	Teleport_Head(hWnd, width, height);
+	Head(hWnd, width, height);
 }
 
-void AsSnake::Draw(HDC hdc, HBRUSH hbrush, RECT rect)
+void AsSnake::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 {
-	SelectObject(hdc, hbrush);
+	SelectObject(hdc, pen);
+	SelectObject(hdc, brush);
 	Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-}
-
-void AsSnake::Head()
-{
-	switch (dir)
-	{
-	case LEFT:
-		Snake_Rect.left -= Apple.scale;
-		Snake_Rect.right -= Apple.scale;
-		break;
-	case RIGHT:
-		Snake_Rect.left += Apple.scale;
-		Snake_Rect.right += Apple.scale;
-		break;
-	case UP:
-		Snake_Rect.top -= Apple.scale;
-		Snake_Rect.bottom -= Apple.scale;
-		break;
-	case DOWN:
-		Snake_Rect.top += Apple.scale;
-		Snake_Rect.bottom += Apple.scale;
-		break;
-	default:
-		break;
-	}
 }
 
 void AsSnake::Tail(HWND hWnd)
@@ -87,27 +69,51 @@ void AsSnake::Tail(HWND hWnd)
 		InvalidateRect(hWnd, &body.front(), FALSE);
 }
 
-void AsSnake::Teleport_Head(HWND hWnd, int width, int height)
+void AsSnake::Head(HWND hWnd, int width, int height)
 { 
-	//RIGHT
-	if (width < Snake_Rect.right) {
-		Snake_Rect.right = 0;
-		Snake_Rect.left = Apple.scale;
+	switch (dir)
+	{
+	case LEFT:
+		Snake_Rect.left -= AsConfig::scale;
+		Snake_Rect.right -= AsConfig::scale;
+		if (Snake_Rect.right < 0) {
+			Snake_Rect.right = width;
+			Snake_Rect.left = width - AsConfig::scale;
+		}
+		break;
+
+	case RIGHT:
+		Snake_Rect.left += AsConfig::scale;
+		Snake_Rect.right += AsConfig::scale;
+		if (width < Snake_Rect.left) {
+			Snake_Rect.right = AsConfig::scale;
+			Snake_Rect.left = 0;
+		}
+		break;
+
+	case UP:
+		Snake_Rect.top -= AsConfig::scale;
+		Snake_Rect.bottom -= AsConfig::scale;
+		if (Snake_Rect.bottom < 0) {
+			Snake_Rect.bottom = height - AsConfig::Frame_Correction;
+			Snake_Rect.top = height - AsConfig::scale - AsConfig::Frame_Correction;
+		}
+		break;
+
+	case DOWN:
+		Snake_Rect.top += AsConfig::scale;
+		Snake_Rect.bottom += AsConfig::scale;
+		if (height < Snake_Rect.top + AsConfig::Frame_Correction) {
+			Snake_Rect.top = 0;
+			Snake_Rect.bottom = AsConfig::scale;
+		}
+		break;
+
+	default:
+		break;
 	}
-	//DOWN
-	else if (height < Snake_Rect.top + Apple.Frame_Correction) {
-		Snake_Rect.top = 0;
-		Snake_Rect.bottom = Apple.scale;
-	}
-	//LEFT
-	else if (Snake_Rect.right < 0) {
-		Snake_Rect.right = width;
-		Snake_Rect.left = width - Apple.scale;
-	}
-	//UP
-	else if (Snake_Rect.bottom < 0) {
-		Snake_Rect.bottom = height - Apple.Frame_Correction;
-		Snake_Rect.top = height - Apple.scale - Apple.Frame_Correction;
+	if (Apple.Eat(Snake_Rect)) {
+		++tail_length;
 	}
 	InvalidateRect(hWnd, &Snake_Rect, FALSE);
 }
