@@ -1,6 +1,5 @@
 #pragma once
 #include "Apple.h"
-#include <list>
 
 enum eDirection { LEFT = 0, RIGHT, UP, DOWN };
 
@@ -18,9 +17,10 @@ public:
 	static eDirection dir;
 	AsSnake();
 
-	void Init(HWND hWnd);
+	void Init(HWND hWnd, RECT Start_Win);
 	void Go(HDC hdc, HWND hWnd);
-	int On_Time(HWND hWnd) ;
+	int On_Time(HWND hWnd);
+
 private:
 	void Movement(HWND hWnd, int width, int height);
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);

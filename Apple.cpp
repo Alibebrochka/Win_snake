@@ -12,12 +12,19 @@ void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 	Ellipse(hdc, rect.left, rect.top, rect.right, rect.bottom);
 }
 
-void AsApple::Spawn(HWND hWnd, int width, int height)
+void AsApple::Spawn(HWND hWnd, int width, int height, std::list <RECT> body)
 {
+	if (width - AsConfig::Frame < Apple_Rect.left ||
+		(height - AsConfig::Functional_frame - AsConfig::Frame) < Apple_Rect.top)
+		does_not_have_an_apple = true;
+
 	if (does_not_have_an_apple) {
+
+
+
 		does_not_have_an_apple = false;
 		int coord_X = 1 + rand() % (width - AsConfig::scale);
-		int coord_Y = 1 + rand() % (height - AsConfig::scale - AsConfig::Frame_Correction);
+		int coord_Y = 1 + rand() % (height - AsConfig::scale - AsConfig::Functional_frame);
 
 		Apple_Rect.left = coord_X;
 		Apple_Rect.right = coord_X + AsConfig::scale;

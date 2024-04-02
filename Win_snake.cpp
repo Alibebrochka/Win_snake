@@ -100,14 +100,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
 
    int w = 1920, h = 1040;
+   RECT Start_Win{};
+   Start_Win.left = 200 ;
+   Start_Win.right = 1920 - 400;
+   Start_Win.top = 200;
+   Start_Win.bottom = 1040 - 400;
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      200, 200, w-400, h-400, nullptr, nullptr, hInstance, nullptr);
+       Start_Win.left, Start_Win.top, Start_Win.right, Start_Win.bottom, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
       return FALSE;
 
-   Snake.Init(hWnd);
+   Snake.Init(hWnd, Start_Win);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

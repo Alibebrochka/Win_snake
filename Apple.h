@@ -15,7 +15,7 @@ public:
 	AsApple();
 
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);
-	void Spawn(HWND hWnd, int width, int height);
+	void Spawn(HWND hWnd, int width, int height, std::list <RECT> body);
 	bool Eat(RECT snk_rek);
 private:
 };
