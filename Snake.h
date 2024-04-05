@@ -5,9 +5,11 @@ enum eDirection { LEFT = 0, RIGHT, UP, DOWN };
 
 class AsSnake
 {
-	short tail_length{};
+	short tail_length{100};
 	RECT Snake_Rect{}, Win_Rect{};
 	std::list <RECT> body;
+
+	vector<vector<bool>> Level;
 
 	const char Editing_Window = 8;
 	const HPEN Snake_Color_Pen{}, BG_Pen{};
@@ -20,8 +22,9 @@ public:
 	void Init(HWND hWnd, RECT Start_Win);
 	void Go(HDC hdc, HWND hWnd);
 	int On_Time(HWND hWnd);
-
 private:
+	void entry(int rows, int columns, bool b);
+
 	void Movement(HWND hWnd, int width, int height);
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);
 	void Tail(HWND hWnd);
