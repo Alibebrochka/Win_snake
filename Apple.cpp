@@ -23,15 +23,15 @@ void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level
 		LONG coord_X{};
 		LONG coord_Y{};
 		do {
-			coord_X = rand() % ((width - AsConfig::scale) / AsConfig::scale) * AsConfig::scale;
-			coord_Y = rand() % ((height - AsConfig::scale - AsConfig::Functional_frame) / AsConfig::scale) * AsConfig::scale;
+			coord_X = rand() % ((width) / AsConfig::scale) * AsConfig::scale;
+			coord_Y = rand() % ((height - AsConfig::Functional_frame) / AsConfig::scale) * AsConfig::scale;
 		} while (!Level[coord_Y / AsConfig::scale][coord_X / AsConfig::scale]);
 
 		Apple_Rect.left = coord_X;
 		Apple_Rect.right = coord_X + AsConfig::scale;
 		Apple_Rect.top = coord_Y;
 		Apple_Rect.bottom = coord_Y + AsConfig::scale;
-		//does_not_have_an_apple = false;
+		does_not_have_an_apple = false;
 	}
 	InvalidateRect(hWnd, &Apple_Rect, FALSE);
 }

@@ -31,7 +31,7 @@ void AsSnake::Init(HWND hWnd, RECT Start_Win)
 
 void AsSnake::Go(HDC hdc, HWND hWnd)
 {
-	if (!Apple.does_not_have_an_apple)
+	if (Apple.does_not_have_an_apple)
 		Apple.Draw(hdc, BG_Brush, BG_Pen, Apple.Apple_Rect);
 	else
 		Apple.Draw(hdc, Apple.Apple_Col_Brush,Apple.Apple_Col_Pen, Apple.Apple_Rect);
@@ -94,8 +94,8 @@ void AsSnake::Head(HWND hWnd, int width, int height)
 		Snake_Rect.left -= AsConfig::scale;
 		Snake_Rect.right -= AsConfig::scale;
 		if (Snake_Rect.left < 0) {
-			Snake_Rect.right = width;
-			Snake_Rect.left = width - AsConfig::scale;
+			Snake_Rect.right = (width/ AsConfig::scale)* AsConfig::scale;
+			Snake_Rect.left = Snake_Rect.right - AsConfig::scale;
 		}
 		break;
 
@@ -112,8 +112,8 @@ void AsSnake::Head(HWND hWnd, int width, int height)
 		Snake_Rect.top -= AsConfig::scale;
 		Snake_Rect.bottom -= AsConfig::scale;
 		if (Snake_Rect.top < 0) {
-			Snake_Rect.bottom = height - AsConfig::Functional_frame;
-			Snake_Rect.top = height - AsConfig::scale - AsConfig::Functional_frame;
+			Snake_Rect.bottom = ((height - AsConfig::Functional_frame)/ AsConfig::scale) * AsConfig::scale;
+			Snake_Rect.top = Snake_Rect.bottom - AsConfig::scale;
 		}
 		break;
 
