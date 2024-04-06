@@ -7,7 +7,7 @@ class AsApple
 {
 
 public:
-	bool does_not_have_an_apple = true;//не маЇ €блука?
+	bool does_not_have_an_apple = true;//€блука не маЇ
 	
 	const HPEN Apple_Col_Pen{};
 	const HBRUSH Apple_Col_Brush{};

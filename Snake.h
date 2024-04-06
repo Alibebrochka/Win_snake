@@ -1,11 +1,11 @@
 #pragma once
 #include "Apple.h"
 
-enum eDirection { LEFT = 0, RIGHT, UP, DOWN };
+enum eDirection { LEFT = 0, RIGHT, UP, DOWN, UNK};
 
 class AsSnake
 {
-	short tail_length{1};
+	unsigned short tail_length{1};
 	RECT Snake_Rect{}, Win_Rect{};
 	std::list <RECT> body;
 
@@ -29,6 +29,7 @@ private:
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);
 	void Tail(HWND hWnd);
 	void Head(HWND hWnd, int width, int height);
+	void Autocannibalism(RECT rect);
 
 	AsApple Apple{};
 };

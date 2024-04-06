@@ -14,10 +14,10 @@ void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 
 void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level)
 {
-	if (width - AsConfig::Frame < Apple_Rect.left ||
-		(height - AsConfig::Functional_frame - AsConfig::Frame) < Apple_Rect.top)
+	//якщо яблуко за рамками вікна то його не має
+	if (width - AsConfig::Frame < Apple_Rect.left ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Apple_Rect.top)
 		does_not_have_an_apple = true;
-
+	//спавн яблука
 	if (does_not_have_an_apple) {
 
 		LONG coord_X{};
@@ -37,7 +37,7 @@ void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level
 }
 
 bool AsApple::Eat(RECT snk_rek)
-{
+{//обчислення координат пересікання прямокутників: голови і яблука
 	RECT intersection_rect{};
 	if (IntersectRect(&intersection_rect, &Apple_Rect, &snk_rek)) 
 		does_not_have_an_apple = true;

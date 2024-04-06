@@ -7,7 +7,7 @@ BG_Pen(CreatePen(PS_SOLID, 0, RGB(0, 0, 0))),
 BG_Brush(CreateSolidBrush(RGB(0, 0, 0)))
 {}
 
- eDirection AsSnake::dir = DOWN;
+eDirection AsSnake::dir = DOWN;
 
 void AsSnake::Init(HWND hWnd, RECT Start_Win)
 {
@@ -50,11 +50,10 @@ int AsSnake::On_Time(HWND hWnd)
 	GetWindowRect(hWnd, &Win_Rect);
 	int width = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
 	int height = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
-	//доробити
+	Level.resize(height / AsConfig::scale, vector<bool>(width,true));
 	for (auto& x : Level) {
 		x.resize(width / AsConfig::scale, true);
 	}
-
 	Apple.Spawn(hWnd, width, height, Level);
 	Movement(hWnd, width, height);
 	return 0;
@@ -126,11 +125,18 @@ void AsSnake::Head(HWND hWnd, int width, int height)
 		}
 		break;
 
-	default:
+	case UNK:
 		break;
 	}
+	Autocannibalism(Snake_Rect);
 	if (Apple.Eat(Snake_Rect)) {
 		++tail_length;
 	}
 	InvalidateRect(hWnd, &Snake_Rect, FALSE);
+}
+
+void AsSnake::Autocannibalism(RECT rect)
+{
+	if (!Level[rect.top / AsConfig::scale][rect.left / AsConfig::scale])
+		dir = UNK;
 }
