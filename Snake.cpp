@@ -13,7 +13,7 @@ unsigned int AsSnake::get_tail_length() const
 
 eDirection AsSnake::dir = DOWN;
 
-void AsSnake::Movement(HWND hWnd, int width, int height, AsApple Apple)
+void AsSnake::Movement(HWND hWnd, int width, int height, AsApple &Apple)
 {
 	Tail(hWnd);
 	Head(hWnd, width, height, Apple);
@@ -34,7 +34,7 @@ void AsSnake::Tail(HWND hWnd)
 		InvalidateRect(hWnd, &body.front(), FALSE);
 }
 
-void AsSnake::Head(HWND hWnd, int width, int height, AsApple Apple)
+void AsSnake::Head(HWND hWnd, int width, int height, AsApple &Apple)
 { 
 	switch (dir)
 	{
