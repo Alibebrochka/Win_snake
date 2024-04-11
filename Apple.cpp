@@ -1,8 +1,8 @@
 #include "Apple.h"
 
 AsApple::AsApple():
-Apple_Col_Pen(CreatePen(PS_SOLID, 0, RGB(255, 0, 0))),
-Apple_Col_Brush(CreateSolidBrush(RGB(255, 0, 0)))
+Col_Pen(CreatePen(PS_SOLID, 0, RGB(255, 0, 0))),
+Col_Brush(CreateSolidBrush(RGB(255, 0, 0)))
 {}
 
 void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
@@ -12,10 +12,10 @@ void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 	Ellipse(hdc, rect.left, rect.top, rect.right, rect.bottom);
 }
 
-void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level)
+void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map)
 {
 	//якщо яблуко за рамками вікна то його не має
-	if (width - AsConfig::Frame < Apple_Rect.left ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Apple_Rect.top)
+	if (width - AsConfig::Frame < Rect.left ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Rect.top)
 		does_not_have_an_apple = true;
 	//спавн яблука
 	if (does_not_have_an_apple) {
@@ -23,23 +23,24 @@ void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level
 		LONG coord_X{};
 		LONG coord_Y{};
 		do {
-			coord_X = rand() % ((width) / AsConfig::scale) * AsConfig::scale;
-			coord_Y = rand() % ((height - AsConfig::Functional_frame) / AsConfig::scale) * AsConfig::scale;
-		} while (!Level[coord_Y / AsConfig::scale][coord_X / AsConfig::scale]);
+			coord_X = AsConfig::Scaling(rand() % width);
+			coord_Y = AsConfig::Scaling(rand() % (height - AsConfig::Functional_frame));
+		} while (!Map[coord_Y / AsConfig::scale][coord_X / AsConfig::scale]);
 
-		Apple_Rect.left = coord_X;
-		Apple_Rect.right = coord_X + AsConfig::scale;
-		Apple_Rect.top = coord_Y;
-		Apple_Rect.bottom = coord_Y + AsConfig::scale;
+		Rect.left = coord_X;
+		Rect.right = coord_X + AsConfig::scale;
+		Rect.top = coord_Y;
+		Rect.bottom = coord_Y + AsConfig::scale;
 		does_not_have_an_apple = false;
 	}
-	InvalidateRect(hWnd, &Apple_Rect, FALSE);
+	InvalidateRect(hWnd, &Rect, FALSE);
 }
 
 bool AsApple::Eat(RECT snk_rek)
 {//обчислення координат пересікання прямокутників: голови і яблука
 	RECT intersection_rect{};
-	if (IntersectRect(&intersection_rect, &Apple_Rect, &snk_rek)) 
+	if (IntersectRect(&intersection_rect, &Rect, &snk_rek)) {
 		does_not_have_an_apple = true;
+	}
 	return does_not_have_an_apple;
 }

@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Apple.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Apple.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Snake.cpp" />
     <ClCompile Include="Win_snake.cpp" />
   </ItemGroup>

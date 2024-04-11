@@ -3,7 +3,7 @@
 
 #include "framework.h"
 #include "Win_snake.h"
-#include "Snake.h"
+#include "Engine.h"
 
 #define MAX_LOADSTRING 100
 
@@ -11,7 +11,7 @@
 HINSTANCE hInst;                                // текущий экземпляр
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
-AsSnake Snake;
+AsEngine Engine;
 
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     // TODO: Разместите код здесь.
-
+    AsConfig::Setup_Colors();
     // Инициализация глобальных строк
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_WINSNAKE, szWindowClass, MAX_LOADSTRING);
@@ -77,7 +77,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance      = hInstance;
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINSNAKE));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = CreateSolidBrush(RGB(0, 0, 0));
+    wcex.hbrBackground  = AsConfig::BG_Brush;
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_WINSNAKE);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -112,7 +112,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    if (!hWnd)
       return FALSE;
 
-   Snake.Init(hWnd, Start_Win);
+   Engine.Init(hWnd, Start_Win);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -157,7 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-            Snake.Go(hdc, hWnd);
+            Engine.Go(hdc, hWnd);
             EndPaint(hWnd, &ps);
         }
         break;
@@ -192,7 +192,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_TIMER:
         if (wParam == WM_USER + 1)
-            Snake.On_Time(hWnd);
+            Engine.On_Time(hWnd);
         break;
 
     default:

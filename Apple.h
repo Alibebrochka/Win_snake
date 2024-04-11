@@ -9,14 +9,14 @@ class AsApple
 public:
 	bool does_not_have_an_apple = true;//€блука не маЇ
 	
-	const HPEN Apple_Col_Pen{};
-	const HBRUSH Apple_Col_Brush{};
-	RECT Apple_Rect{};
+	const HPEN Col_Pen{};
+	const HBRUSH Col_Brush{};
+	RECT Rect{};
 
 	AsApple();
 
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);
-	void Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Level);
+	void Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map);
 	bool Eat(RECT snk_rek);
 private:
 };
