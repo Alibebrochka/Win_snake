@@ -50,7 +50,7 @@ int AsEngine::On_Time(HWND hWnd)
 	}
 
 	Apple.Spawn(hWnd, width, height, Map);
-	Snake.Movement(hWnd, width, height);
+	Snake.Movement(hWnd, width, height, Apple);
 	return 0;
 }
 

@@ -20,11 +20,9 @@ public:
 	unsigned int get_tail_length() const;
 
 	void Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect);
-	void Movement(HWND hWnd, int width, int height);
+	void Movement(HWND hWnd, int width, int height, AsApple Apple);
 private:
 	void Tail(HWND hWnd);
-	void Head(HWND hWnd, int width, int height);
+	void Head(HWND hWnd, int width, int height, AsApple Apple);
 	void Autocannibalism(RECT rect);
-
-	AsApple Apple{};
 };
