@@ -13,10 +13,10 @@ void AsSnake::Init(HWND hWnd, RECT Start_Win)
 {
 	srand(static_cast<unsigned int>(time(0)));
 
-	int width = (Start_Win.left + Start_Win.right - Editing_Window) - (Start_Win.left + Editing_Window);
-	int height = (Start_Win.top + Start_Win.bottom) - (Start_Win.top + Editing_Window);
+	Width = (Start_Win.left + Start_Win.right - Editing_Window) - (Start_Win.left + Editing_Window);
+	Height = (Start_Win.top + Start_Win.bottom) - (Start_Win.top + Editing_Window);
 
-	Level = vector<vector<bool>>(height / AsConfig::scale, vector<bool>(width / AsConfig::scale, true));
+	Level = vector<vector<bool>>(Height / AsConfig::scale, vector<bool>(Width / AsConfig::scale, true));
 
 	Snake_Rect.left = 0 /*width / 2 - AsConfig::scale*/;
 	Snake_Rect.right = Snake_Rect.left + AsConfig::scale;
@@ -31,31 +31,43 @@ void AsSnake::Init(HWND hWnd, RECT Start_Win)
 
 void AsSnake::Go(HDC hdc, HWND hWnd)
 {
-	if (Apple.does_not_have_an_apple)
-		Apple.Draw(hdc, BG_Brush, BG_Pen, Apple.Apple_Rect);
-	else
-		Apple.Draw(hdc, Apple.Apple_Col_Brush,Apple.Apple_Col_Pen, Apple.Apple_Rect);
+	if (dir == UNK){
+		;
+	}
+	else {
+		if (Apple.does_not_have_an_apple)
+			Apple.Draw(hdc, BG_Brush, BG_Pen, Apple.Apple_Rect);
+		else
+			Apple.Draw(hdc, Apple.Apple_Col_Brush, Apple.Apple_Col_Pen, Apple.Apple_Rect);
 
-	Draw(hdc, Snake_Color_Brush, Snake_Color_Pen, Snake_Rect);
+		Draw(hdc, Snake_Color_Brush, Snake_Color_Pen, Snake_Rect);
 
-	if (body.size() > tail_length) {
-		Draw(hdc, BG_Brush, BG_Pen, body.front());
-		entry(body.front().top, body.front().left, true);
-		body.pop_front();
+		if (body.size() > tail_length) {
+			Draw(hdc, BG_Brush, BG_Pen, body.front());
+			entry(body.front().top, body.front().left, true);
+			body.pop_front();
+		}
 	}
 }
 
 int AsSnake::On_Time(HWND hWnd) 
 {
 	GetWindowRect(hWnd, &Win_Rect);
-	int width = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
-	int height = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
-	Level.resize(height / AsConfig::scale, vector<bool>(width,true));
-	for (auto& x : Level) {
-		x.resize(width / AsConfig::scale, true);
+	int width_new = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
+	int height_new = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
+
+	if (Width != width_new || Height != height_new) {
+		Width = width_new;
+		Height = height_new;
+		Level.resize(Height / AsConfig::scale, vector<bool>(Width, true));
+		for (auto& x : Level) {
+			x.resize(Width / AsConfig::scale, true);
+		}
 	}
-	Apple.Spawn(hWnd, width, height, Level);
-	Movement(hWnd, width, height);
+
+	Apple.Spawn(hWnd, Width, Height, Level);
+	if (dir != UNK)
+		Movement(hWnd, Width, Height);
 	return 0;
 }
 

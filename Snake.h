@@ -5,6 +5,8 @@ enum eDirection { LEFT = 0, RIGHT, UP, DOWN, UNK};
 
 class AsSnake
 {
+	int Width{}, Height{};
+
 	unsigned short tail_length{1};
 	RECT Snake_Rect{}, Win_Rect{};
 	std::list <RECT> body;
