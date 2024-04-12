@@ -24,33 +24,42 @@ void AsEngine::Init(HWND hWnd, RECT Start_Win)
 
 void AsEngine::Go(HDC hdc, HWND hWnd)
 {
-	if (Apple.does_not_have_an_apple)
-		Apple.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Apple.Rect);
-	else
-		Apple.Draw(hdc, Apple.Col_Brush, Apple.Col_Pen, Apple.Rect);
+	if (Snake.dir == UNK) {
+		;
+	}
+	else {
+		if (Apple.does_not_have_an_apple)
+			Apple.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Apple.Rect);
+		else
+			Apple.Draw(hdc, Apple.Col_Brush, Apple.Col_Pen, Apple.Rect);
 
-	Snake.Draw(hdc, Snake.Color_Brush, Snake.Color_Pen, Snake.Rect);
+		Snake.Draw(hdc, Snake.Color_Brush, Snake.Color_Pen, Snake.Rect);
 
-	if (Snake.body.size() > Snake.get_tail_length()) {
-		Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
-		entry(Snake.body.front().top, Snake.body.front().left, true);
-		Snake.body.pop_front();
+		if (Snake.body.size() > Snake.get_tail_length()) {
+			Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
+			entry(Snake.body.front().top, Snake.body.front().left, true);
+			Snake.body.pop_front();
+		}
 	}
 }
 
 int AsEngine::On_Time(HWND hWnd)
 {
 	GetWindowRect(hWnd, &Win_Rect);
-	int width = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
-	int height = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
+	int width_new = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
+	int height_new = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
 
-	Map.resize(height / AsConfig::scale, vector<bool>(width, true));
-	for (auto& x : Map) {
-		x.resize(width / AsConfig::scale, true);
+	if (Width != width_new || Height != height_new) {
+		Width = width_new;
+		Height = height_new;
+		Map.resize(Height / AsConfig::scale, vector<bool>(Width, true));
+		for (auto& x : Map)
+			x.resize(Width / AsConfig::scale, true);
 	}
 
-	Apple.Spawn(hWnd, width, height, Map);
-	Snake.Movement(hWnd, width, height, Apple);
+	Apple.Spawn(hWnd, Width, Height, Map);
+	if (Snake.dir != UNK)
+		Snake.Movement(hWnd, Width, Height, Apple);
 	return 0;
 }
 

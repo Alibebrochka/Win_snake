@@ -2,6 +2,8 @@
 #include "Snake.h"
 
 class AsEngine {
+	int Width{}, Height{};
+
 	const char Editing_Window = 8;
 public:
 	static vector<vector<bool>> Map;
