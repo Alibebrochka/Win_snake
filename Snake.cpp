@@ -77,6 +77,7 @@ void AsSnake::Head(HWND hWnd, int width, int height, AsApple &Apple)
 	case UNK:
 		break;
 	}
+	//передаю голову
 	Autocannibalism(Rect);
 	if (Apple.Eat(Rect)) {
 		++tail_length;
@@ -86,6 +87,7 @@ void AsSnake::Head(HWND hWnd, int width, int height, AsApple &Apple)
 
 void AsSnake::Autocannibalism(RECT rect)
 {
+	//якщо 
 	if (!AsEngine::Map[rect.top / AsConfig::scale][rect.left / AsConfig::scale])
 		dir = UNK;
 

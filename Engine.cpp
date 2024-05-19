@@ -19,13 +19,13 @@ void AsEngine::Init(HWND hWnd, RECT Start_Win)
 	
 	entry(Snake.body.back().top, Snake.body.back().left, false);
 
-	SetTimer(hWnd, WM_USER + 1, 75, 0);
+	SetTimer(hWnd, WM_USER + 1, 85, 0);
 }
 
 void AsEngine::Go(HDC hdc, HWND hWnd)
 {
 	if (Snake.dir == UNK) {
-		;
+		;//смерть
 	}
 	else {
 		if (Apple.does_not_have_an_apple)
@@ -45,13 +45,16 @@ void AsEngine::Go(HDC hdc, HWND hWnd)
 
 int AsEngine::On_Time(HWND hWnd)
 {
+	//перевірка на зміну розмірів вікна
 	GetWindowRect(hWnd, &Win_Rect);
 	int width_new = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
 	int height_new = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
 
+	//якщо розміри не співпадають то вони оновлюються
 	if (Width != width_new || Height != height_new) {
 		Width = width_new;
 		Height = height_new;
+		//оновлення мапи
 		Map.resize(Height / AsConfig::scale, vector<bool>(Width, true));
 		for (auto& x : Map)
 			x.resize(Width / AsConfig::scale, true);

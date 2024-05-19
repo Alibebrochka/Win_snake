@@ -129,9 +129,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_PAINT    - Отрисовка главного окна
 //  WM_DESTROY  - отправить сообщение о выходе и вернуться
 //
-//
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    static bool traffic = true;
     PAINTSTRUCT ps;
     switch (message)
     {
@@ -166,31 +167,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
 
-    case WM_KEYDOWN:
-        switch (wParam) {
-        case VK_LEFT:
-            if(AsSnake::dir != RIGHT)
-                AsSnake::dir = LEFT;
-            break;
+    case WM_KEYDOWN: {
+        if (traffic) {
+            traffic = false;
+            switch (wParam) {
+            case VK_LEFT:
+                if (AsSnake::dir != RIGHT)
+                    AsSnake::dir = LEFT;
+                break;
 
-        case VK_RIGHT:
-            if (AsSnake::dir != LEFT)
-                AsSnake::dir = RIGHT;
-            break;
+            case VK_RIGHT:
+                if (AsSnake::dir != LEFT)
+                    AsSnake::dir = RIGHT;
+                break;
 
-        case VK_DOWN:
-            if (AsSnake::dir != UP)
-                AsSnake::dir = DOWN;
-            break;
+            case VK_DOWN:
+                if (AsSnake::dir != UP)
+                    AsSnake::dir = DOWN;
+                break;
 
-        case VK_UP:
-            if (AsSnake::dir != DOWN)
-                AsSnake::dir = UP;
-            break;
+            case VK_UP:
+                if (AsSnake::dir != DOWN)
+                    AsSnake::dir = UP;
+                break;
+            }
         }
         break;
+    }
 
     case WM_TIMER:
+        traffic = true;
         if (wParam == WM_USER + 1)
             Engine.On_Time(hWnd);
         break;

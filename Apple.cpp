@@ -15,7 +15,7 @@ void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map)
 {
 	//якщо яблуко за рамками вікна то його не має
-	if (width - AsConfig::Frame < Rect.left ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Rect.top)
+	if (width - AsConfig::Frame < Rect.right ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Rect.bottom)
 		does_not_have_an_apple = true;
 	//спавн яблука
 	if (does_not_have_an_apple) {
@@ -23,8 +23,8 @@ void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map)
 		LONG coord_X{};
 		LONG coord_Y{};
 		do {
-			coord_X = AsConfig::Scaling(rand() % width);
-			coord_Y = AsConfig::Scaling(rand() % (height - AsConfig::Functional_frame));
+			coord_X = AsConfig::Scaling(rand() % width - AsConfig::scale);
+			coord_Y = AsConfig::Scaling(rand() % (height - AsConfig::Functional_frame - AsConfig::scale));
 		} while (!Map[coord_Y / AsConfig::scale][coord_X / AsConfig::scale]);
 
 		Rect.left = coord_X;
