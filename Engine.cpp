@@ -1,10 +1,8 @@
-#include "Engine.h"
+п»ї#include "Engine.h"
 vector<vector<bool>> AsEngine::Map = vector<vector<bool>>(0, vector<bool>(0));
 
 void AsEngine::Init(HWND hWnd, RECT Start_Win)
 {
-	srand(static_cast<unsigned int>(time(0)));
-
 	int width = (Start_Win.left + Start_Win.right - Editing_Window) - (Start_Win.left + Editing_Window);
 	int height = (Start_Win.top + Start_Win.bottom) - (Start_Win.top + Editing_Window);
 
@@ -22,39 +20,34 @@ void AsEngine::Init(HWND hWnd, RECT Start_Win)
 	SetTimer(hWnd, WM_USER + 1, 85, 0);
 }
 
-void AsEngine::Go(HDC hdc, HWND hWnd)
+void AsEngine::Draw(HDC hdc, HWND hWnd)
 {
-	if (Snake.dir == UNK) {
-		;//смерть
-	}
-	else {
-		if (Apple.does_not_have_an_apple)
-			Apple.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Apple.Rect);
-		else
-			Apple.Draw(hdc, Apple.Col_Brush, Apple.Col_Pen, Apple.Rect);
+	if (Apple.does_not_have_an_apple)
+		Apple.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Apple.Rect);
+	else
+		Apple.Draw(hdc, Apple.Col_Brush, Apple.Col_Pen, Apple.Rect);
 
-		Snake.Draw(hdc, Snake.Color_Brush, Snake.Color_Pen, Snake.Rect);
+	Snake.Draw(hdc, Snake.Color_Brush_now, Snake.Color_Pen_now, Snake.Rect);
 
-		if (Snake.body.size() > Snake.get_tail_length()) {
-			Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
-			entry(Snake.body.front().top, Snake.body.front().left, true);
-			Snake.body.pop_front();
-		}
+	if (Snake.body.size() > Snake.get_tail_length()) {
+		Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
+		entry(Snake.body.front().top, Snake.body.front().left, true);
+		Snake.body.pop_front();
 	}
 }
 
 int AsEngine::On_Time(HWND hWnd)
 {
-	//перевірка на зміну розмірів вікна
+	//РїРµСЂРµРІС–СЂРєР° РЅР° Р·РјС–РЅСѓ СЂРѕР·РјС–СЂС–РІ РІС–РєРЅР°
 	GetWindowRect(hWnd, &Win_Rect);
 	int width_new = (Win_Rect.right - Editing_Window) - (Win_Rect.left + Editing_Window);
 	int height_new = Win_Rect.bottom - (Win_Rect.top + Editing_Window);
 
-	//якщо розміри не співпадають то вони оновлюються
+	//СЏРєС‰Рѕ СЂРѕР·РјС–СЂРё РЅРµ СЃРїС–РІРїР°РґР°СЋС‚СЊ С‚Рѕ РІРѕРЅРё РѕРЅРѕРІР»СЋСЋС‚СЊСЃСЏ
 	if (Width != width_new || Height != height_new) {
 		Width = width_new;
 		Height = height_new;
-		//оновлення мапи
+		//РѕРЅРѕРІР»РµРЅРЅСЏ РјР°РїРё
 		Map.resize(Height / AsConfig::scale, vector<bool>(Width, true));
 		for (auto& x : Map)
 			x.resize(Width / AsConfig::scale, true);
@@ -62,7 +55,7 @@ int AsEngine::On_Time(HWND hWnd)
 
 	Apple.Spawn(hWnd, Width, Height, Map);
 	if (Snake.dir != UNK)
-		Snake.Movement(hWnd, Width, Height, Apple);
+		Snake.Movement(hWnd, Width, Height, Snake.state, Apple);
 	return 0;
 }
 

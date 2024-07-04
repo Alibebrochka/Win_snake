@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <list>
 #include <vector>
@@ -22,11 +22,8 @@ public:
 	static void Create_Pen_Brush(unsigned char r, unsigned char g, unsigned char b, HPEN& pen, HBRUSH& brush);
 	static const AColor BG_Color;
 
-
-
-
 	static char const Frame = 2;
 	static char const Functional_frame = 51;
-	static unsigned short const scale = 55;
+	static unsigned short const scale = 25;
 	static int Scaling(int num);
 };

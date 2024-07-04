@@ -1,4 +1,4 @@
-#include "Config.h"
+﻿#include "Config.h"
 //Color
 AColor::AColor(unsigned char r, unsigned char g, unsigned char b):R(r),G(g),B(b)
 {}

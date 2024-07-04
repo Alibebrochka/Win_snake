@@ -1,4 +1,4 @@
-#include "Apple.h"
+п»ї#include "Apple.h"
 
 AsApple::AsApple():
 Col_Pen(CreatePen(PS_SOLID, 0, RGB(255, 0, 0))),
@@ -14,10 +14,10 @@ void AsApple::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
 
 void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map)
 {
-	//якщо яблуко за рамками вікна то його не має
+	//СЏРєС‰Рѕ СЏР±Р»СѓРєРѕ Р·Р° СЂР°РјРєР°РјРё РІС–РєРЅР° С‚Рѕ Р№РѕРіРѕ РЅРµ РјР°С”
 	if (width - AsConfig::Frame < Rect.right ||(height - AsConfig::Functional_frame - AsConfig::Frame) < Rect.bottom)
 		does_not_have_an_apple = true;
-	//спавн яблука
+	//СЃРїР°РІРЅ СЏР±Р»СѓРєР°
 	if (does_not_have_an_apple) {
 
 		LONG coord_X{};
@@ -37,10 +37,10 @@ void AsApple::Spawn(HWND hWnd, int width, int height, vector<vector<bool>> Map)
 }
 
 bool AsApple::Eat(RECT snk_rek)
-{//обчислення координат пересікання прямокутників: голови і яблука
+{//РѕР±С‡РёСЃР»РµРЅРЅСЏ РєРѕРѕСЂРґРёРЅР°С‚ РїРµСЂРµСЃС–РєР°РЅРЅСЏ РїСЂСЏРјРѕРєСѓС‚РЅРёРєС–РІ: РіРѕР»РѕРІРё С– СЏР±Р»СѓРєР°
 	RECT intersection_rect{};
-	if (IntersectRect(&intersection_rect, &Rect, &snk_rek)) {
+	if (IntersectRect(&intersection_rect, &Rect, &snk_rek))
 		does_not_have_an_apple = true;
-	}
+	
 	return does_not_have_an_apple;
 }

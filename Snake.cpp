@@ -1,9 +1,13 @@
-#include "Snake.h"
+﻿#include "Snake.h"
 #include "Engine.h"
 
 AsSnake::AsSnake():
-Color_Pen(CreatePen(PS_SOLID, 0, RGB(255, 255, 255))),
-Color_Brush(CreateSolidBrush(RGB(255, 255, 255)))
+Color_Pen_life(CreatePen(PS_SOLID, 0, RGB(255, 255, 255))),
+Color_Brush_life(CreateSolidBrush(RGB(255, 255, 255))),
+Color_Pen_dead(CreatePen(PS_SOLID, 0, RGB(255, 0, 0))),
+Color_Brush_dead(CreateSolidBrush(RGB(255, 0, 0))),
+Color_Pen_now(Color_Pen_life),
+Color_Brush_now(Color_Brush_life)
 {}
 
 unsigned int AsSnake::get_tail_length() const
@@ -12,11 +16,30 @@ unsigned int AsSnake::get_tail_length() const
 }
 
 eDirection AsSnake::dir = DOWN;
+eState AsSnake::state = LIFE;
 
-void AsSnake::Movement(HWND hWnd, int width, int height, AsApple &Apple)
+void AsSnake::Movement(HWND hWnd, int width, int height, eState state, AsApple &Apple)
 {
-	Tail(hWnd);
-	Head(hWnd, width, height, Apple);
+	switch (state)
+	{
+	case LIFE:
+		Tail(hWnd);
+		Head(hWnd, width, height, Apple);
+		break;
+
+	case DEAD:
+		Tail(hWnd);
+		Head(hWnd, width, height, Apple);
+		break;
+
+	case GAMEOVER:
+		dir = UNK;
+		break;
+
+	default:
+		break;
+	}
+	
 }
 
 void AsSnake::Draw(HDC hdc, HBRUSH brush, HPEN pen, RECT rect)
@@ -35,7 +58,7 @@ void AsSnake::Tail(HWND hWnd)
 }
 
 void AsSnake::Head(HWND hWnd, int width, int height, AsApple &Apple)
-{ 
+{//нові координати голови
 	switch (dir)
 	{
 	case LEFT:
@@ -77,18 +100,28 @@ void AsSnake::Head(HWND hWnd, int width, int height, AsApple &Apple)
 	case UNK:
 		break;
 	}
-	//������� ������
+	//передаю голову
 	Autocannibalism(Rect);
-	if (Apple.Eat(Rect)) {
+
+	if (Apple.Eat(Rect)) 
 		++tail_length;
-	}
 	InvalidateRect(hWnd, &Rect, FALSE);
 }
 
 void AsSnake::Autocannibalism(RECT rect)
 {
-	//���� 
-	if (!AsEngine::Map[rect.top / AsConfig::scale][rect.left / AsConfig::scale])
-		dir = UNK;
+	//якщо в точці переносу голови є тіло (0) то змійка врізається в ньго і помирає 
+	if (!AsEngine::Map[rect.top / AsConfig::scale][rect.left / AsConfig::scale]) {
+		if (state == LIFE) {
+			state = DEAD;
+			Color_Pen_now = Color_Pen_dead;
+			Color_Brush_now = Color_Brush_dead;
+		}
+		else {
+			state = LIFE;
+			Color_Pen_now = Color_Pen_life;
+			Color_Brush_now = Color_Brush_life;
+		}
+	}
 
 }
