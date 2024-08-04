@@ -1,12 +1,13 @@
 ﻿#include "Engine.h"
-vector<vector<bool>> AsEngine::Map = vector<vector<bool>>(0, vector<bool>(0));
+
+vector<vector<int>> AsEngine::Map = vector<vector<int>>(0, vector<int>(0));
 
 void AsEngine::Init(HWND hWnd, RECT Start_Win)
 {
 	int width = (Start_Win.left + Start_Win.right - Editing_Window) - (Start_Win.left + Editing_Window);
 	int height = (Start_Win.top + Start_Win.bottom) - (Start_Win.top + Editing_Window);
 
-	Map = vector<vector<bool>>(height / AsConfig::scale, vector<bool>(width / AsConfig::scale, true));
+	Map = vector<vector<int>>(height / AsConfig::scale, vector<int>(width / AsConfig::scale, 1));
 
 	Snake.Rect.left = AsConfig::Scaling(width / 2);
 	Snake.Rect.right = Snake.Rect.left + AsConfig::scale;
@@ -15,7 +16,7 @@ void AsEngine::Init(HWND hWnd, RECT Start_Win)
 
 	Snake.body.push_back(Snake.Rect);
 	
-	entry(Snake.body.back().top, Snake.body.back().left, false);
+	entry(Snake.body.back().top, Snake.body.back().left, 0);
 
 	SetTimer(hWnd, WM_USER + 1, 85, 0);
 }
@@ -25,13 +26,16 @@ void AsEngine::Draw(HDC hdc, HWND hWnd)
 	if (Apple.does_not_have_an_apple)
 		Apple.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Apple.Rect);
 	else
-		Apple.Draw(hdc, Apple.Col_Brush, Apple.Col_Pen, Apple.Rect);
+		Apple.Draw(hdc, Apple.Color_Brush_now, Apple.Color_Pen_now, Apple.Rect);
 
 	Snake.Draw(hdc, Snake.Color_Brush_now, Snake.Color_Pen_now, Snake.Rect);
 
 	if (Snake.body.size() > Snake.get_tail_length()) {
-		Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
-		entry(Snake.body.front().top, Snake.body.front().left, true);
+
+		if (Map[Snake.body.front().top / AsConfig::scale][Snake.body.front().left / AsConfig::scale] != 3)
+			Snake.Draw(hdc, AsConfig::BG_Brush, AsConfig::BG_Pen, Snake.body.front());
+
+		entry(Snake.body.front().top, Snake.body.front().left, 1);
 		Snake.body.pop_front();
 	}
 }
@@ -48,18 +52,21 @@ int AsEngine::On_Time(HWND hWnd)
 		Width = width_new;
 		Height = height_new;
 		//оновлення мапи
-		Map.resize(Height / AsConfig::scale, vector<bool>(Width, true));
+		Map.resize(Height / AsConfig::scale, vector<int>(Width, 1));
 		for (auto& x : Map)
-			x.resize(Width / AsConfig::scale, true);
+			x.resize(Width / AsConfig::scale, 1);
 	}
 
-	Apple.Spawn(hWnd, Width, Height, Map);
+	Apple.Spawn(hWnd, Width, Height, Map, &Snake);
 	if (Snake.dir != UNK)
 		Snake.Movement(hWnd, Width, Height, Snake.state, Apple);
+	//Snake.port = false;
 	return 0;
 }
 
-void AsEngine::entry(int rows, int columns, bool b)
+void AsEngine::entry(int rows, int columns, int b)
 {
+	if (Map[rows / AsConfig::scale][columns / AsConfig::scale] == 3 && b==0)
+		return;
 	Map[rows / AsConfig::scale][columns / AsConfig::scale] = b;
 }

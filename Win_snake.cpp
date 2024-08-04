@@ -168,37 +168,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
     case WM_KEYDOWN: {
-        switch (wParam) {
-
             //напрямок не можна змінити поки змійка не повернеться за попередньо заданим напрямком
-            if (traffic) {
-                traffic = false;
+        if (traffic) {
+            traffic = false;
 
-        case VK_LEFT:
-            if (AsSnake::dir != RIGHT)
-                AsSnake::dir = LEFT;
-            break;
+            switch (wParam) {
+            case VK_LEFT:
+                if (AsSnake::dir != RIGHT)
+                    AsSnake::dir = LEFT;
+                break;
 
-        case VK_RIGHT:
-            if (AsSnake::dir != LEFT)
-                AsSnake::dir = RIGHT;
-            break;
+            case VK_RIGHT:
+                if (AsSnake::dir != LEFT)
+                    AsSnake::dir = RIGHT;
+                break;
 
-        case VK_DOWN:
-            if (AsSnake::dir != UP)
-                AsSnake::dir = DOWN;
-            break;
+            case VK_DOWN:
+                if (AsSnake::dir != UP)
+                    AsSnake::dir = DOWN;
+                break;
 
-        case VK_UP:
-            if (AsSnake::dir != DOWN)
-                AsSnake::dir = UP;
-            break;
+            case VK_UP:
+                if (AsSnake::dir != DOWN)
+                    AsSnake::dir = UP;
+                break;
 
             }
-        case VK_SPACE:
-
-            break;
-
         }
         break;
     }

@@ -6,7 +6,7 @@ class AsEngine {
 	const char Editing_Window = 8;
 
 public:
-	static vector<vector<bool>> Map;
+	static vector<vector<int>> Map;
 
 	RECT Win_Rect{};
 
@@ -14,8 +14,9 @@ public:
 	void Draw(HDC hdc, HWND hWnd);
 	int On_Time(HWND hWnd);
 
-	static void entry(int rows, int columns, bool b);
+	static void entry(int rows, int columns, int b);
 private:
 	AsSnake Snake;
 	AsApple Apple;
+	AsHell* Hell;
 };
